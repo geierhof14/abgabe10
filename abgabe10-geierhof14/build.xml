@@ -1,0 +1,86 @@
+<?xml version="1.0"?> 
+<project name="abgabe10" default="jar">
+	
+    <property name="src.java" value="${basedir}/src"/>
+    <property name="src.junit" value="${basedir}/test"/>
+	
+	<property name="libs" value="${basedir}/libs"/>
+    
+    <property name="target" value="${basedir}/build" />
+    <property name="target.java" value="${target}/java"/>
+    <property name="target.junit" value="${target}/junit"/>
+    <property name="target.testreports" value="${target}/testreports"/>
+    <property name="target.jar" value="${target}/jar"/>	
+   
+	<path id="externalLibs">
+		<pathelement location="${libs}/junit-4.10.jar" />
+	</path>
+
+	<fileset id="javaCode" dir="${src.java}">
+		<include name="**/*.java" />
+	</fileset>
+
+	
+	<fileset id="junitTestCode" dir="${src.junit}">
+		<include name="**/Test*.java" />
+	</fileset>
+	
+    <target name="clean">
+        <delete dir="build"/>
+    </target>
+	
+    <target name="prepare" description="prepare folder structure for compiling classes and generating documentation">
+		<mkdir dir="${target.java}" />
+		<mkdir dir="${target.junit}" />
+		<mkdir dir="${target.jar}" />
+    </target>
+
+	<target name="compile" depends="prepare" description="compiles java sources">
+		<javac srcdir="${src.java}" destdir="${target.java}" includeantruntime="false" />
+		<javac srcdir="${src.junit}" destdir="${target.junit}" includeantruntime="false">
+			<classpath>
+				<pathelement location="${target.java}"/>
+				<path refid="externalLibs" />
+			</classpath>
+		</javac>
+	</target>
+
+	
+	<target name="test" depends="compile" description="testing the java source code" >
+		<mkdir dir="${target.testreports}" />
+		<junit printsummary="yes" haltonfailure="yes">
+			<classpath>
+				<pathelement location="${target.java}" />
+				<pathelement location="${target.junit}" />
+				<path refid="externalLibs" />
+			</classpath>
+			<batchtest todir="${target.testreports}">
+				<fileset refid="junitTestCode" />
+			</batchtest>
+			<formatter type="plain"/>	
+		</junit>	
+	</target>	
+
+    <target name="jar" depends="test" description="creates jar archive for deployement">
+        <mkdir dir="build/jar"/>
+        <jar destfile="build/jar/Point2d.jar" >
+            <manifest>
+                <attribute name="Main-Class" value="at.fhj.itm.Point2d"/>
+            </manifest>
+			<fileset dir="${target.java}">
+				<include name="**/*.class" />
+			</fileset>
+        </jar>
+    </target>
+
+    <target name="run" depends="jar">
+        <java jar="build/jar/Point2d.jar" output="results.txt" fork="true" >
+    		<arg value="setXY" />
+			<arg value="4.0" />
+			<arg value="3.0" />
+        	<arg value="distancefromorigin" />
+    	</java>
+    </target>
+
+</project>
+

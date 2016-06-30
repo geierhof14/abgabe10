@@ -1,0 +1,1 @@
+In der Testklasse werden die getter und setter getestet sowie die distancefrom-Methoden.

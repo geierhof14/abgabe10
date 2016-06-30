@@ -1,0 +1,9 @@
+Testsuite: at.fhj.itm.TestPoint2d
+Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0,012 sec
+
+Testcase: testGetX took 0,001 sec
+Testcase: testSetX took 0 sec
+Testcase: testDistanceFrom took 0 sec
+Testcase: testSetY took 0 sec
+Testcase: testGetY took 0 sec
+Testcase: testDistanceFromOrigin took 0 sec
